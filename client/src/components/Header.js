@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 const Header = () => {
-  //viers
+  //views
   const showNavigation = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link to="#" className="navbar-brand" href="#">
+        <Link to="/" className="navbar-brand">
           Logo
         </Link>
         <button
@@ -21,13 +21,18 @@ const Header = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+              <Link to='/' className="nav-link" aria-current="page">
+                Home
+              </Link>
+            </li>
             <li className="nav-item">
-              <Link className="nav-link" aria-current="page">
+              <Link to='/signup' className="nav-link" aria-current="page">
                 Sign Up
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link">Sign In</Link>
+              <Link to='/signin' className="nav-link">Sign In</Link>
             </li>
           </ul>
         </div>
