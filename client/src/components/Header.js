@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Header = () => {
   //views
-  const showNavigation = () => {
+  const showNavigation = () => (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
         <Link to="/" className="navbar-brand">
@@ -37,8 +37,8 @@ const Header = () => {
           </ul>
         </div>
       </div>
-    </nav>;
-  };
+    </nav>
+  );
   //render
   return <header id="header">{showNavigation()}</header>;
 };

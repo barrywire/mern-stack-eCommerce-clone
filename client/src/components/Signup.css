@@ -1,0 +1,10 @@
+:root
+{
+    --background-color: darkgrey;
+}
+.signup-container
+{
+    background-color: var(--background-color);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
