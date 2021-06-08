@@ -1,10 +1,15 @@
 import { set } from 'mongoose';
 import React, { useState } from 'react';
+import isEmail from 'validator/lib/isEmail';
+import isEmpty from 'validator/lib/isEmpty';
+import equals from 'validator/lib/equals';
+import { showErrorMsg, showSuccessMsg } from '../helpers/message';
 import { Link } from "react-router-dom";
 import './Signup.css';
 
 
 const Signup = () => {
+    /*This hold data before it is sent to the db*/
     const[formData, setFormData] = useState({
         username: '',
         email: '',
@@ -15,6 +20,7 @@ const Signup = () => {
         loading: false /* Visual icon that asks the user to be patient */
     })
 
+    /*Destructuring the form data*/
     const {
         username,
         email,
@@ -37,8 +43,29 @@ const Signup = () => {
    const handleSubmit = evt => {
        evt.preventDefault();
 
-       console.log(formData);
-   }
+       // Client-side validation
+       if (isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(password2)) {
+           setFormData({
+               ...formData, errorMessage:"All fields are required",
+           });
+       } else if (!isEmail(email))
+       {
+            setFormData({
+                ...formData, errorMessage:"Invalid email",
+            });    
+       } else if (!equals(password, password2)) 
+       {
+            setFormData({
+                ...formData, errorMessage:"Passwords do not match",
+            });    
+       } else
+       {
+           //Success
+           setFormData({
+               ...formData, successMessage: "Validation success",
+           });
+       }
+   }; 
     /*******************************
      * VIEWS
     ********************************/
@@ -120,7 +147,7 @@ const Signup = () => {
             </div>
             {/* already have account */}
             <p className='text-center text-white'>
-                Have an account? <Link to='./Signin.js'>Sign In</Link>
+                Have an account? <Link to='./Signin.js  '>Sign In</Link>
             </p>
         </form>
     )
@@ -132,6 +159,8 @@ const Signup = () => {
         <div className='signup-container'>
             <div className='row px-10 vh-100'> {/*vh occupies the entire vertical height of the device*/}
                 <div className='col-md-5 mx-auto '>
+                    {errorMessage && showSuccessMsg(successMessage)}
+                    {errorMessage && showErrorMsg(errorMessage)}
                     { showSignupForm() }
                     {JSON.stringify(formData)}
                 </div>
