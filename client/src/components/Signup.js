@@ -1,9 +1,10 @@
-import { set } from 'mongoose';
+// import { set } from 'mongoose';
 import React, { useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import isEmpty from 'validator/lib/isEmpty';
 import equals from 'validator/lib/equals';
 import { showErrorMsg, showSuccessMsg } from '../helpers/message';
+import { showLoading } from '../helpers/loading';
 import { Link } from "react-router-dom";
 import './Signup.css';
 
@@ -17,7 +18,7 @@ const Signup = () => {
         password2: '',
         successMessage: false,
         errorMessage: false,
-        loading: false /* Visual icon that asks the user to be patient */
+        loading: true, /* Visual icon that asks the user to be patient */
     })
 
     /*Destructuring the form data*/
@@ -37,6 +38,8 @@ const Signup = () => {
         setFormData({
             ...formData,
             [evt.target.name]: evt.target.value,
+            successMessage: '',
+            errorMessage:'',
         })
    }
 
@@ -161,8 +164,9 @@ const Signup = () => {
                 <div className='col-md-5 mx-auto '>
                     {errorMessage && showSuccessMsg(successMessage)}
                     {errorMessage && showErrorMsg(errorMessage)}
+                    {loading && showLoading()}
                     { showSignupForm() }
-                    {JSON.stringify(formData)}
+                    {/* {JSON.stringify(formData)} */}
                 </div>
             </div>
             
