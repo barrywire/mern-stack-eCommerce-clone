@@ -7,68 +7,86 @@ import { showErrorMsg, showSuccessMsg } from '../helpers/message';
 import { showLoading } from '../helpers/loading';
 import { Link } from "react-router-dom";
 import './Signup.css';
+import { signup } from '../api/auth'; 
 
 
 const Signup = () => {
     /*This hold data before it is sent to the db*/
-    const[formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         password2: '',
         successMessage: false,
         errorMessage: false,
-        loading: true, /* Visual icon that asks the user to be patient */
+        loading: false, /* Visual icon that asks the user to be patient */
     })
 
     /*Destructuring the form data*/
     const {
         username,
         email,
-        password, 
-        password2, 
-        successMessage, 
-        errorMessage, 
-        loading} = formData;
+        password,
+        password2,
+        successMessage,
+        errorMessage,
+        loading } = formData;
     /*******************************
      * EVENT HANDLERS
     ********************************/
-   const handleChange = evt => {
-    //    console.log(evt);
+    const handleChange = evt => {
+        //    console.log(evt);
         setFormData({
             ...formData,
             [evt.target.name]: evt.target.value,
             successMessage: '',
-            errorMessage:'',
+            errorMessage: '',
         })
-   }
+    }
 
-   const handleSubmit = evt => {
-       evt.preventDefault();
+    const handleSubmit = evt => {
+        evt.preventDefault();
 
-       // Client-side validation
-       if (isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(password2)) {
-           setFormData({
-               ...formData, errorMessage:"All fields are required",
-           });
-       } else if (!isEmail(email))
-       {
+        // Client-side validation
+        if (isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(password2)) {
             setFormData({
-                ...formData, errorMessage:"Invalid email",
-            });    
-       } else if (!equals(password, password2)) 
-       {
+                ...formData, errorMessage: "All fields are required",
+            });
+        } else if (!isEmail(email)) {
             setFormData({
-                ...formData, errorMessage:"Passwords do not match",
-            });    
-       } else
-       {
-           //Success
-           setFormData({
-               ...formData, successMessage: "Validation success",
-           });
-       }
-   }; 
+                ...formData, errorMessage: "Invalid email",
+            });
+        } else if (!equals(password, password2)) {
+            setFormData({
+                ...formData, errorMessage: "Passwords do not match",
+            });
+        } else {
+            const { username, email, password } = formData;
+            const data = { username, email, password };
+
+            setFormData({...formData, loading: true});
+
+            signup(data)
+                .then(response => {
+                    console.log('Axios signup success:',response);
+                    setFormData({
+                        username: '',
+                        email: '',
+                        password: '',
+                        password2: '',
+                        loading: false,
+                        successMessage: response.data.successMsg
+                    })
+                })
+                .catch(err => {
+                    console.log('Axios signup error', err);
+                    setFormData({
+                        ...formData,
+                        loading: false,
+                    })
+                })
+        }
+    };
     /*******************************
      * VIEWS
     ********************************/
@@ -158,18 +176,18 @@ const Signup = () => {
     /*******************************
      * RENDERER
     ********************************/
-    return(
+    return (
         <div className='signup-container'>
             <div className='row px-10 vh-100'> {/*vh occupies the entire vertical height of the device*/}
                 <div className='col-md-5 mx-auto '>
                     {errorMessage && showSuccessMsg(successMessage)}
                     {errorMessage && showErrorMsg(errorMessage)}
                     {loading && showLoading()}
-                    { showSignupForm() }
+                    {showSignupForm()}
                     {/* {JSON.stringify(formData)} */}
                 </div>
             </div>
-            
+
         </div>
     );
 };
